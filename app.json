@@ -13,10 +13,10 @@
         "media",
         "bot"
     ],
-    "repository": "https://github.com/biisal/biisal-file-stream-pro/",
+    "repository": "https://github.com/sandippshah/biisal-file-stream-pro/",
     "success_url": "/",
     "logo": "https://i.postimg.cc/jjgVnXrV/20231106-110427.png",
-    "website": "https://biisal.github.io/biisal",
+    "website": "https://telegram.me/pikashow_Movies_Update",
     "env": {
         "ENV": {
             "description": "Set this to True if you don't want to crash the bot",
