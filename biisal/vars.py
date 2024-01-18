@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-bot_name = "Pikashow File2Link Bot"
+bot_name = "Pikashow-File2Link"
 bisal_channel = "https://telegram.me/pikashow_Movies_Update"
 bisal_grp = "https://t.me/+wD9gChGIfjo1MDQ9"
 
@@ -36,9 +36,9 @@ class Var(object):
     FQDN = str(getenv('FQDN', 'BIND_ADRESS:PORT')) if not ON_HEROKU or getenv('FQDN', '') else APP_NAME+'.herokuapp.com'
     HAS_SSL=bool(getenv('HAS_SSL',True))
     if HAS_SSL:
-        URL = "https://pikashow-file2link-bot-9888ff2cf3ed.herokuapp.com/".format(FQDN)
+        URL = "https://pikashow-file2link-bot-e7b7b6605b8d.herokuapp.com/".format(FQDN)
     else:
-        URL = "https://pikashow-file2link-bot-9888ff2cf3ed.herokuapp.com/".format(FQDN)
+        URL = "https://pikashow-file2link-bot-e7b7b6605b8d.herokuapp.com/".format(FQDN)
     DATABASE_URL = str(getenv('DATABASE_URL', 'mongodb+srv://file2link:Surajrathod.878@cluster0.qsj0pe0.mongodb.net/?retryWrites=true&w=majority'))
     UPDATES_CHANNEL = str(getenv('UPDATES_CHANNEL', 'Rx_Bots')) 
     BANNED_CHANNELS = list(set(int(x) for x in str(getenv("BANNED_CHANNELS", "")).split()))   
