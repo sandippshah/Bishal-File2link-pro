@@ -75,6 +75,9 @@ async def private_receive_handler(c: Client, m: Message):
                 
                 disable_web_page_preview=True)
             return
+            ban_chk = await db.is_banned(int(m.from_user.id))
+    if ban_chk == True:
+        return await m.reply(Var.BAN_ALERT)
     try:
         log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
         stream_link = f"{Var.URL}watch/{str(log_msg.id)}/{quote_plus(get_name(log_msg))}?hash={get_hash(log_msg)}"
