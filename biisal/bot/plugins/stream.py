@@ -101,7 +101,8 @@ async def channel_receive_handler(bot, broadcast):
     if int(broadcast.chat.id) in Var.BAN_CHNL:
         print("chat trying to get straming link is found in BAN_CHNL,so im not going to give stram link")
         return
-    if int(broadcast.chat.id) in Var.BANNED_CHANNELS:
+    ban_chk = await db.is_banned(int(broadcast.chat.id))
+    if (int(broadcast.chat.id) in Var.BANNED_CHANNELS) or (ban_chk == True):
         await bot.leave_chat(broadcast.chat.id)
         return
     try:
