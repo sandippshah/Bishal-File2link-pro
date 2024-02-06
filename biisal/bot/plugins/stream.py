@@ -75,7 +75,7 @@ async def private_receive_handler(c: Client, m: Message):
                 
                 disable_web_page_preview=True)
             return
-            ban_chk = await db.is_banned(int(m.from_user.id))
+    ban_chk = await db.is_banned(int(m.from_user.id))
     if ban_chk == True:
         return await m.reply(Var.BAN_ALERT)
     try:
