@@ -13,7 +13,7 @@
         "media",
         "bot"
     ],
-    "repository": "https://github.com/sandippshah/biisal-file-stream-pro/",
+    "repository": "https://github.com/sandippshah/Bishal-File2link-pro",
     "success_url": "/",
     "logo": "https://i.postimg.cc/jjgVnXrV/20231106-110427.png",
     "website": "https://telegram.me/pikashow_Movies_Update",
@@ -97,6 +97,10 @@
             "description": " Session Name for Bot [ Add biisal]",
             "value": "File-To-Link",
             "required": false
+        },
+        "BAN_ALERT": {
+            "description": "[Optional] Add the text you wish to display when attempting to get links while banned."
+            
         }
     },
     "buildpacks": [
