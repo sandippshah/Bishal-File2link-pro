@@ -14,7 +14,7 @@ class Var(object):
     MULTI_CLIENT = False
     API_ID = int(getenv('API_ID', '904789'))
     API_HASH = str(getenv('API_HASH', '2262ef67ced426b9eea57867b11666a1'))
-    BOT_TOKEN = str(getenv('BOT_TOKEN' , '6936102398:AAEUEdV0wVmMbUs23f4VduwwZ65jrk-20C4'))
+    BOT_TOKEN = str(getenv('BOT_TOKEN' , '6936102398:AAGOoB8iWsjBj7BRAhtGfidVRKbrusMHxno'))
     name = str(getenv('name', 'biisal'))
     SLEEP_THRESHOLD = int(getenv('SLEEP_THRESHOLD', '60'))
     WORKERS = int(getenv('WORKERS', '4'))
@@ -36,9 +36,9 @@ class Var(object):
     FQDN = str(getenv('FQDN', 'BIND_ADRESS:PORT')) if not ON_HEROKU or getenv('FQDN', '') else APP_NAME+'.herokuapp.com'
     HAS_SSL=bool(getenv('HAS_SSL',True))
     if HAS_SSL:
-        URL = "https://bishal-file2link.onrender.com/".format(FQDN)
+        URL = "https://file2link-bot-pikashow-1e7fb7a2ec2c.herokuapp.com/".format(FQDN)
     else:
-        URL = "https://bishal-file2link.onrender.com/".format(FQDN)
+        URL = "https://file2link-bot-pikashow-1e7fb7a2ec2c.herokuapp.com/".format(FQDN)
     DATABASE_URL = str(getenv('DATABASE_URL', 'mongodb+srv://file2link:Surajrathod.878@cluster0.qsj0pe0.mongodb.net/?retryWrites=true&w=majority'))
     UPDATES_CHANNEL = str(getenv('UPDATES_CHANNEL', 'Rx_Bots')) 
     BANNED_CHANNELS = list(set(int(x) for x in str(getenv("BANNED_CHANNELS", "")).split()))   
