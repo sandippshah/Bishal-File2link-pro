@@ -251,7 +251,7 @@ async def cb_handler(client, query):
                      InlineKeyboardButton("ᴄʟᴏsᴇ ‼️", callback_data="close_data")
                   ]]            )
         )
-        elif data.startswith("sendAlert"):
+    elif data.startswith("sendAlert"):
         user_id =(data.split("_")[1])
         user_id = int(user_id.replace(' ' , ''))
         if len(str(user_id)) == 10:
