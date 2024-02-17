@@ -88,8 +88,12 @@ async def private_receive_handler(c: Client, m: Message):
             text=msg_text.format(get_name(log_msg), humanbytes(get_media_file_size(m)), online_link, stream_link),
             quote=True,
             disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("sᴛʀᴇᴀᴍ 🔺", url=stream_link), #Stream Link
-                                                InlineKeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ 🔻', url=online_link)]]) #Download Link
+            reply_markup=InlineKeyboardMarkup(
+                    [
+                    [InlineKeyboardButton("🎦 Wᴀᴛᴄʜ Oɴʟɪɴᴇ 👀", url=stream_link)], #Stream Link
+                    [InlineKeyboardButton('⚡Fᴀsᴛ Dᴏᴡɴʟᴏᴀᴅ ⏬', url=online_link)]  #Download Link
+                    ]
+            )
         )
     except FloodWait as e:
         print(f"Sleeping for {str(e.x)}s")
@@ -117,11 +121,11 @@ async def channel_receive_handler(bot, broadcast):
             chat_id=broadcast.chat.id,
             message_id=broadcast.id,
             reply_markup=InlineKeyboardMarkup(
-                [
-                    [InlineKeyboardButton("sᴛʀᴇᴀᴍ 🔺", url=stream_link),
-                    InlineKeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ 🔻', url=online_link)] 
-                ]
-            )
+                    [
+                    [InlineKeyboardButton("🎦 Wᴀᴛᴄʜ Oɴʟɪɴᴇ 👀", url=stream_link)], #Stream Link
+                    [InlineKeyboardButton('⚡Fᴀsᴛ Dᴏᴡɴʟᴏᴀᴅ ⏬', url=online_link)]  #Download Link
+                    ]
+            ) 
         )
     except FloodWait as w:
         print(f"Sleeping for {str(w.x)}s")
