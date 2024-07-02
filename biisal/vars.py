@@ -14,7 +14,7 @@ class Var(object):
     SHORT_API = environ.get("SHORT_API", "6ac07ac202019e09497a0daad5abe04e11a98ac2") # shortlink api
     SHORT_URL = environ.get("SHORT_URL", "publicearn.com") # shortlink domain without https://
     VERIFY_TUTORIAL = environ.get("VERIFY_TUTORIAL", "https://t.me/how2dow/55") # how to open link 
-    BOT_USERNAME = environ.get("BOT_USERNAME", "TGMoveisRobot") # bot username without @
+    BOT_USERNAME = environ.get("BOT_USERNAME", "Pikashow_File2Link_Bot") # bot username without @
     VERIFY = environ.get("VERIFY", "True") # set True Or False and make sure spelling is correct and first letter capital. 
     MULTI_CLIENT = False
     API_ID = int(getenv('API_ID', '904789'))
