@@ -13,6 +13,8 @@ from pyrogram.errors import FloodWait, UserNotParticipant
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 #from utils_bot import get_shortlink
 
+from biisal.utils.a_utils import check_verification, get_token, verify_user, check_token
+
 from biisal.utils.file_properties import get_name, get_hash, get_media_file_size
 db = Database(Var.DATABASE_URL, Var.name)
 
@@ -33,72 +35,94 @@ msg_text ="""<b>‣ ʏᴏᴜʀ ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
 
 
 
-@StreamBot.on_message((filters.private) & (filters.document | filters.video | filters.audio | filters.photo) , group=4)
+@StreamBot.on_message((filters.private) & (filters.document | filters.video | filters.audio | filters.photo), group=4)
 async def private_receive_handler(c: Client, m: Message):
     if not await db.is_user_exist(m.from_user.id):
         await db.add_user(m.from_user.id)
         await c.send_message(
             Var.BIN_CHANNEL,
-            f"New User Joined! : \n\n Name : [{m.from_user.first_name}](tg://user?id={m.from_user.id}) Started Your Bot!!"
+            f"New User Joined! : \n\nName: [{m.from_user.first_name}](tg://user?id={m.from_user.id}) Started Your Bot!!"
         )
+
     if Var.UPDATES_CHANNEL != "None":
         try:
             user = await c.get_chat_member(Var.UPDATES_CHANNEL, m.chat.id)
             if user.status == "kicked":
                 await c.send_message(
                     chat_id=m.chat.id,
-                    text="You are banned!\n\n  **Cᴏɴᴛᴀᴄᴛ Support [Support](http://telegram.me/Rx_Bots/) They Wɪʟʟ Hᴇʟᴘ Yᴏᴜ**",
-                    
+                    text="You are banned!\n\n**Contact Support [Support](http://telegram.me/spshah878/) They Will Help You**",
                     disable_web_page_preview=True
                 )
-                return 
+                return
         except UserNotParticipant:
             await c.send_photo(
                 chat_id=m.chat.id,
                 photo="https://graph.org/file/28dad3c3aea3cad735a6e.jpg",
-                caption=""""<b>Hᴇʏ ᴛʜᴇʀᴇ!\n\nPʟᴇᴀsᴇ ᴊᴏɪɴ ᴏᴜʀ ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ ! 😊\n\nDᴜᴇ ᴛᴏ sᴇʀᴠᴇʀ ᴏᴠᴇʀʟᴏᴀᴅ, ᴏɴʟʏ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ sᴜʙsᴄʀɪʙᴇʀs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ʙᴏᴛ !</b>""",
+                caption="""<b>Hey there!\n\nPlease join our updates channel to use me! 😊\n\nDue to server overload, only our channel subscribers can use this bot!</b>""",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton("Jᴏɪɴ ɴᴏᴡ 🚩", url=f"https://t.me/{Var.UPDATES_CHANNEL}")
+                            InlineKeyboardButton("Join now 🚩", url=f"https://t.me/{Var.UPDATES_CHANNEL}")
                         ]
                     ]
                 ),
-                
             )
             return
         except Exception as e:
-            await m.reply_text(e)
+            await m.reply_text(str(e))
             await c.send_message(
                 chat_id=m.chat.id,
-                text="**Sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ Wʀᴏɴɢ. Cᴏɴᴛᴀᴄᴛ ᴍʏ Support** [Support](http://telegram.me/Rx_Bots/)",
-                
-                disable_web_page_preview=True)
+                text="**Something went wrong. Contact my Support** [Support](http://telegram.me/spshah878/)",
+                disable_web_page_preview=True
+            )
             return
+
     ban_chk = await db.is_banned(int(m.from_user.id))
-    if ban_chk == True:
+    if ban_chk:
         return await m.reply(Var.BAN_ALERT)
+
+    if not await check_verification(c, m.from_user.id) and Var.VERIFY:
+        btn = [[
+            InlineKeyboardButton("Verify", url=await get_token(c, m.from_user.id, f"https://telegram.me/{Var.BOT_USERNAME}?start="))
+        ], [
+            InlineKeyboardButton("How To Open Link & Verify", url=Var.VERIFY_TUTORIAL)
+        ]]
+        await m.reply_text(
+            text="<b>Yᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴅᴀʏ.! Pʟᴇᴀsᴇ ᴠᴇʀɪғʏ ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ..! Yᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ ᴏɴᴄᴇ ɪɴ ᴀ ᴅᴀʏ...!\nɴᴇᴇᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴍᴇᴍʙᴇʀsʜɪᴘ ? (ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ). ᴄᴏɴᴛᴀᴄᴛ @spshah878</b>",
+            protect_content=True,
+            reply_markup=InlineKeyboardMarkup(btn)
+        )
+        return
+
     try:
         log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
         stream_link = f"{Var.URL}watch/{str(log_msg.id)}/{quote_plus(get_name(log_msg))}?hash={get_hash(log_msg)}"
         online_link = f"{Var.URL}{str(log_msg.id)}/{quote_plus(get_name(log_msg))}?hash={get_hash(log_msg)}"
 
-        await log_msg.reply_text(text=f"**RᴇQᴜᴇꜱᴛᴇᴅ ʙʏ :** [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n**Uꜱᴇʀ ɪᴅ :** `{m.from_user.id}`\n**Stream ʟɪɴᴋ :** {stream_link}", disable_web_page_preview=True,  quote=True)
+        await log_msg.reply_text(
+            text=f"**Requested by:** [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n**User ID:** `{m.from_user.id}`\n**Stream link:** {stream_link}",
+            disable_web_page_preview=True, 
+            quote=True
+        )
         await m.reply_text(
             text=msg_text.format(get_name(log_msg), humanbytes(get_media_file_size(m)), online_link, stream_link),
             quote=True,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
-                    [
-                    [InlineKeyboardButton("🎦 Wᴀᴛᴄʜ Oɴʟɪɴᴇ 👀", url=stream_link)], #Stream Link
-                    [InlineKeyboardButton('⚡Fᴀsᴛ Dᴏᴡɴʟᴏᴀᴅ ⏬', url=online_link)]  #Download Link
-                    ]
+                [
+                    [InlineKeyboardButton("🎦 Watch Online 👀", url=stream_link)],  # Stream Link
+                    [InlineKeyboardButton('⚡ Fast Download ⏬', url=online_link)]  # Download Link
+                ]
             )
         )
     except FloodWait as e:
         print(f"Sleeping for {str(e.x)}s")
         await asyncio.sleep(e.x)
-        await c.send_message(chat_id=Var.BIN_CHANNEL, text=f"Gᴏᴛ FʟᴏᴏᴅWᴀɪᴛ ᴏғ {str(e.x)}s from [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n\n**𝚄𝚜𝚎𝚛 𝙸𝙳 :** `{str(m.from_user.id)}`", disable_web_page_preview=True)
+        await c.send_message(
+            chat_id=Var.BIN_CHANNEL, 
+            text=f"Got FloodWait of {str(e.x)}s from [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n\n**User ID:** `{str(m.from_user.id)}`", 
+            disable_web_page_preview=True
+        )
 
 @StreamBot.on_message(filters.channel & ~filters.group & (filters.document | filters.video | filters.photo)  & ~filters.forwarded, group=-1)
 async def channel_receive_handler(bot, broadcast):

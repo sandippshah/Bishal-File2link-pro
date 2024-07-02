@@ -14,74 +14,96 @@ from biisal.utils.file_properties import get_name, get_hash, get_media_file_size
 db = Database(Var.DATABASE_URL, Var.name)
 from pyrogram.types import ReplyKeyboardMarkup
 from biisal.vars import bot_name , bisal_channel , bisal_grp
+from biisal.utils.a_utils import check_verification, get_token, verify_user, check_token
 
 
 SRT_TXT = """<b>ᴊᴀɪ sʜʀᴇᴇ ᴋʀsɴᴀ {}!,
 I ᴀᴍ Fɪʟᴇ ᴛᴏ Lɪɴᴋ Gᴇɴᴇʀᴀᴛᴏʀ Bᴏᴛ ᴡɪᴛʜ Cʜᴀɴɴᴇʟ sᴜᴘᴘᴏʀᴛ.
 
 Sᴇɴᴅ ᴍᴇ ᴀɴʏ ғɪʟᴇ ᴀɴᴅ ɢᴇᴛ ᴀ ᴅɪʀᴇᴄᴛ ᴅᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ ᴀɴᴅ sᴛʀᴇᴀᴍᴀʙʟᴇ ʟɪɴᴋ.!
-ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <a href='http://telegram.me/Rx_Bots/'>Shaho</a></b>"""
+ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <a href='http://telegram.me/shaho007/'>Shaho</a></b>"""
 
-@StreamBot.on_message(filters.command("start") & filters.private )
+@StreamBot.on_message(filters.command("start") & filters.private)
 async def start(b, m):
     if not await db.is_user_exist(m.from_user.id):
         await db.add_user(m.from_user.id)
         await b.send_message(
             Var.NEW_USER_LOG,
-            f"**Nᴇᴡ Usᴇʀ Jᴏɪɴᴇᴅ:** \n\n__Mʏ Nᴇᴡ Fʀɪᴇɴᴅ__ [{m.from_user.first_name}](tg://user?id={m.from_user.id}) __Sᴛᴀʀᴛᴇᴅ Yᴏᴜʀ Bᴏᴛ !!__"
+            f"**New User Joined:** \n\n__My new friend__ [{m.from_user.first_name}](tg://user?id={m.from_user.id}) __started your bot!__"
         )
+
+    data = m.text.split()
+    if len(data) > 1 and data[1].split("-", 1)[0] == "verify":
+        userid = data[1].split("-", 2)[1]
+        token = data[1].split("-", 3)[2]
+        if str(m.from_user.id) != str(userid):
+            return await m.reply_text(
+                text="<b>Invalid link or Expired link!</b>",
+                protect_content=True
+            )
+        is_valid = await check_token(b, userid, token)
+        if is_valid:
+            await verify_user(b, userid, token)
+            await m.reply_text(
+                text=f"<b>Hey {m.from_user.mention}, You are successfully verified!\nNow you have unlimited access for all files till today midnight.\nɴᴇᴇᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴍᴇᴍʙᴇʀsʜɪᴘ ? (ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ). ᴄᴏɴᴛᴀᴄᴛ @spshah878</b>",
+                protect_content=True
+            )
+        else:
+            return await m.reply_text(
+                text="<b>Invalid link or Expired link!</b>",
+                protect_content=True
+            )
+        return  # Return early after handling verification
+
     if Var.UPDATES_CHANNEL != "None":
         try:
             user = await b.get_chat_member(Var.UPDATES_CHANNEL, m.chat.id)
             if user.status == "kicked":
                 await b.send_message(
                     chat_id=m.chat.id,
-                    text="__𝓢𝓞𝓡𝓡𝓨, 𝓨𝓞𝓤 𝓐𝓡𝓔 𝓐𝓡𝓔 𝓑𝓐𝓝𝓝𝓔𝓓 𝓕𝓡𝓞𝓜 𝓤𝓢𝓘𝓝𝓖 𝓜𝓔. 𝓒ᴏɴᴛᴀᴄᴛ ᴛʜᴇ 𝓓ᴇᴠᴇʟᴏᴘᴇʀ__\n\n  **𝙃𝙚 𝙬𝙞𝙡𝙡 𝙝𝙚𝙡𝙥 𝙮𝙤𝙪**",
+                    text="__Sorry, you are banned from using me. Contact the developer for help.__",
                     disable_web_page_preview=True
                 )
                 return
         except UserNotParticipant:
-             await StreamBot.send_photo(
+            await StreamBot.send_photo(
                 chat_id=m.chat.id,
                 photo="https://graph.org/file/28dad3c3aea3cad735a6e.jpg",
-                caption=""""<b>Hᴇʏ ᴛʜᴇʀᴇ!\n\nPʟᴇᴀsᴇ ᴊᴏɪɴ ᴏᴜʀ ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ ! 😊\n\nDᴜᴇ ᴛᴏ sᴇʀᴠᴇʀ ᴏᴠᴇʀʟᴏᴀᴅ, ᴏɴʟʏ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ sᴜʙsᴄʀɪʙᴇʀs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ʙᴏᴛ !</b>""",
+                caption="<b>Hey there!\n\nPlease join our updates channel to use me! 😊\n\nDue to server overload, only our channel subscribers can use this bot!</b>",
                 reply_markup=InlineKeyboardMarkup(
                     [
-                        [
-                            InlineKeyboardButton("Jᴏɪɴ ɴᴏᴡ 🚩", url=f"https://t.me/{Var.UPDATES_CHANNEL}")
-                        ]
+                        [InlineKeyboardButton("Join now 🚩", url=f"https://t.me/{Var.UPDATES_CHANNEL}")]
                     ]
-                ),
-                
+                )
             )
-             return
+            return
         except Exception:
             await b.send_message(
                 chat_id=m.chat.id,
-                text="<b>sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ.ᴘʟᴇᴀsᴇ <a href='http://telegram.me/Rx_Bots/'>ᴄʟɪᴄᴋ ʜᴇʀᴇ ғᴏʀ sᴜᴘᴘᴏʀᴛ</a></b>",
-                
-                disable_web_page_preview=True)
+                text="<b>Something went wrong. Please <a href='http://telegram.me/spshah878/'>click here for support</a></b>",
+                disable_web_page_preview=True
+            )
             return
-    await StreamBot.send_photo(
-    chat_id=m.chat.id,
-    photo="https://graph.org/file/28dad3c3aea3cad735a6e.jpg",
-    caption= SRT_TXT.format(m.from_user.mention(style="md")),
-    reply_markup=InlineKeyboardMarkup(
-        [
-            [InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ 🤡", url=f"http://telegram.me/Rx_Bots/")],
-            [
-                 InlineKeyboardButton("ᴀʙᴏᴜᴛ 😎", callback_data="about"),
-                 InlineKeyboardButton("ʜᴇʟᴘ 😅", callback_data="help")
-            ],
-            [InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url=f"http://telegram.me/Rx_Bots/")],
 
+    await StreamBot.send_photo(
+        chat_id=m.chat.id,
+        photo="https://graph.org/file/28dad3c3aea3cad735a6e.jpg",
+        caption=SRT_TXT.format(m.from_user.mention(style="md")),
+        reply_markup=InlineKeyboardMarkup(
             [
-                 InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ 🔻", url=f"https://www.google.com"),
-                 InlineKeyboardButton("ᴅᴇᴠ 😊", callback_data="aboutDev")
+                [InlineKeyboardButton("Update Channel 🤡", url="http://telegram.me/Rx_Bots/")],
+                [
+                    InlineKeyboardButton("About 😎", callback_data="about"),
+                    InlineKeyboardButton("Help 😅", callback_data="help")
+                ],
+                [InlineKeyboardButton("Our Group 🚩", url="http://telegram.me/Pikashow_Movies_Request3/")],
+                [
+                    InlineKeyboardButton("Disclaimer 🔻", url="https://t.me/pikashow_Movies_Update/43"),
+                    InlineKeyboardButton("Dev 😊", callback_data="aboutDev")
+                ]
             ]
-        ]
+        )
     )
-)
 @StreamBot.on_message(filters.command("help") & filters.private )
 async def help_cd(b, m):
     if not await db.is_user_exist(m.from_user.id):
@@ -118,7 +140,7 @@ async def help_cd(b, m):
         except Exception:
             await b.send_message(
                 chat_id=m.chat.id,
-                text="<b>sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ.ᴘʟᴇᴀsᴇ <a href='http://telegram.me/Rx_Bots/'>ᴄʟɪᴄᴋ ʜᴇʀᴇ ғᴏʀ sᴜᴘᴘᴏʀᴛ</a></b>",
+                text="<b>sᴏᴍᴇᴛʜɪɴɢ ᴡᴇɴᴛ ᴡʀᴏɴɢ.ᴘʟᴇᴀsᴇ <a href='http://telegram.me/spshah878/'>ᴄʟɪᴄᴋ ʜᴇʀᴇ ғᴏʀ sᴜᴘᴘᴏʀᴛ</a></b>",
                 
                 disable_web_page_preview=True)
             return
@@ -132,8 +154,8 @@ async def help_cd(b, m):
                 InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ 🤡", url=f"http://telegram.me/Rx_Bots/")
             ],
             [
-                InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ 🔻", url=f"https://www.google.com"),
-                InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url=f"http://telegram.me/Rx_Bots/"),
+                InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ 🔻", url=f"https://t.me/pikashow_Movies_Update/43"),
+                InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url=f"http://telegram.me/Pikashow_Movies_Request3/"),
 
             ],
             [
@@ -200,89 +222,113 @@ async def cb_handler(client, query):
     if data == "close_data":
         await query.message.delete()
 
-
-    if data == "start":
+    elif data == "start":
         await query.message.edit_caption(
-        caption= SRT_TXT.format(query.from_user.mention(style="md")),
-        reply_markup=InlineKeyboardMarkup(
+            caption=SRT_TXT.format(query.from_user.mention(style="md")),
+            reply_markup=InlineKeyboardMarkup(
                 [
-            [InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ 🤡", url=f"http://telegram.me/Rx_Bots/")],
-            [
-                 InlineKeyboardButton("ᴀʙᴏᴜᴛ 😎", callback_data="about"),
-                 InlineKeyboardButton("ʜᴇʟᴘ 😅", callback_data="help")
-            ],
-            [InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url=f"http://telegram.me/Rx_Bots/")],
-
-            [
-                 InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ 🔻", url=f"https://telegra.ph/Disclaimer-11-07-37"),
-                 InlineKeyboardButton("ᴅᴇᴠ 😊", callback_data="aboutDev")
-            ]
-        ]
+                    [InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ 🤡", url="http://telegram.me/Rx_Bots/")],
+                    [
+                        InlineKeyboardButton("ᴀʙᴏᴜᴛ 😎", callback_data="about"),
+                        InlineKeyboardButton("ʜᴇʟᴘ 😅", callback_data="help")
+                    ],
+                    [InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url="http://telegram.me/Pikashow_Movies_Request3/")],
+                    [
+                        InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ 🔻", url="https://t.me/pikashow_Movies_Update/43"),
+                        InlineKeyboardButton("ᴅᴇᴠ 😊", callback_data="aboutDev")
+                    ]
+                ]
             )
         )
 
-    
     elif data == "about":
         await query.message.edit_caption(
-            caption=f"<b>Mʏ ɴᴀᴍᴇ :<a href='http://telegram.me/Rx_Bots/'>{bot_name}</a>\nAᴅᴍɪɴ : <a href='http://telegram.me/Rx_Bots/'>Pikashow</a>\nʜᴏsᴛᴇᴅ ᴏɴ : ʜᴇʀᴏᴋᴜ\nᴅᴀᴛᴀʙᴀsᴇ : ᴍᴏɴɢᴏ ᴅʙ\nʟᴀɴɢᴜᴀɢᴇ : ᴘʏᴛʜᴏɴ 3</b>",
+            caption=(
+                f"<b>Mʏ ɴᴀᴍᴇ :<a href='http://telegram.me/Rx_Bots/'>{bot_name}</a>\n"
+                f"Aᴅᴍɪɴ : <a href='http://telegram.me/spshah878/'>shaho</a>\n"
+                "ʜᴏsᴛᴇᴅ ᴏɴ : ʜᴇʀᴏᴋᴜ\n"
+                "ᴅᴀᴛᴀʙᴀsᴇ : ᴍᴏɴɢᴏ ᴅʙ\n"
+                "ʟᴀɴɢᴜᴀɢᴇ : ᴘʏᴛʜᴏɴ 3</b>"
+            ),
             reply_markup=InlineKeyboardMarkup(
-                [[ 
-                     InlineKeyboardButton("ʜᴏᴍᴇ", callback_data="start"),
-                     InlineKeyboardButton("ᴄʟᴏsᴇ ‼️", callback_data="close_data")
-                  ]]
+                [
+                    [
+                        InlineKeyboardButton("ʜᴏᴍᴇ", callback_data="start"),
+                        InlineKeyboardButton("ᴄʟᴏsᴇ ‼️", callback_data="close_data")
+                    ]
+                ]
             )
         )
     elif data == "help":
         await query.message.edit_caption(
-        caption=f"<b>ᴡᴇ ᴅᴏɴᴛ ɴᴇᴇᴅ ᴍᴀɴʏ <a href='http://telegram.me/Rx_Bots/'>ᴄᴏᴍᴍᴀɴᴅs</a> ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ 🤩.\n\nᴊᴜsᴛ sᴇɴᴅ ᴍᴇ <a href='http://telegram.me/Rx_Bots/'>ᴠɪᴅᴇᴏ ғɪʟᴇs</a> ᴀɴᴅ ɪ ᴡɪʟʟ ɢɪᴠᴇ ʏᴏᴜ <a href='http://telegram.me/Rx_Bots/'>ᴅɪʀᴇᴄᴛ ᴅᴏᴡɴʟᴏᴀᴅ & sᴛʀᴇᴀᴍᴀʙʟᴇ</a> ʟɪɴᴋ.\n\nᴏʀ ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴍᴇ ɪɴ <a href='http://telegram.me/Rx_Bots/'>ʏᴏᴜʀ ᴄʜᴀɴɴᴇʟ</a>..ᴊᴜsᴛ ᴀᴅᴅ ᴍᴇ ᴀɴᴅ ᴍᴀᴋᴇ ᴍᴇ ᴀᴅᴍɪɴ ᴀɴᴅ sᴇᴇ ᴍʏ ᴍᴀɢɪᴄ 😎</b>",
+            caption=(
+                f"<b>ᴡᴇ ᴅᴏɴᴛ ɴᴇᴇᴅ ᴍᴀɴʏ <a href='http://telegram.me/Rx_Bots/'>ᴄᴏᴍᴍᴀɴᴅs</a> ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ 🤩.\n\n"
+                "ᴊᴜsᴛ sᴇɴᴅ ᴍᴇ <a href='http://telegram.me/Rx_Bots/'>ᴠɪᴅᴇᴏ ғɪʟᴇs</a> ᴀɴᴅ ɪ ᴡɪʟʟ ɢɪᴠᴇ ʏᴏᴜ "
+                "<a href='http://telegram.me/Rx_Bots/'>ᴅɪʀᴇᴄᴛ ᴅᴏᴡɴʟᴏᴀᴅ & sᴛʀᴇᴀᴍᴀʙʟᴇ</a> ʟɪɴᴋ.\n\n"
+                "ᴏʀ ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴍᴇ ɪɴ <a href='http://telegram.me/Rx_Bots/'>ʏᴏᴜʀ ᴄʜᴀɴɴᴇʟ</a>.."
+                "ᴊᴜsᴛ ᴀᴅᴅ ᴍᴇ ᴀɴᴅ ᴍᴀᴋᴇ ᴍᴇ ᴀᴅᴍɪɴ ᴀɴᴅ sᴇᴇ ᴍʏ ᴍᴀɢɪᴄ 😎</b>"
+            ),
             reply_markup=InlineKeyboardMarkup(
-[[ 
-                     InlineKeyboardButton("ʜᴏᴍᴇ", callback_data="start"),
-                     InlineKeyboardButton("ᴄʟᴏsᴇ ‼️", callback_data="close_data")
-                  ]]            )
+                [
+                    [
+                        InlineKeyboardButton("ʜᴏᴍᴇ", callback_data="start"),
+                        InlineKeyboardButton("ᴄʟᴏsᴇ ‼️", callback_data="close_data")
+                    ]
+                ]
+            )
         )
+
     elif data == "aboutDev":
-        # please don't steal credit
         await query.message.edit_caption(
-            caption=f"<b>ᴊᴀɪ sʜʀᴇᴇ ᴋʀsɴᴀ ᴅᴇᴀʀ...\nɪᴍ <a href='http://telegram.me/Rx_Bots/'>Bɪɪsᴀʟ</a>\nɪ ᴀᴍ ᴛʜᴇ ᴀᴅᴍɪɴ ᴏғ ᴛʜɪs ʙᴏᴛ..ᴀɴᴅ ɪ ᴍᴀᴅᴇ ᴛʜᴇ  ʙᴏᴛ ʙʏ ʜᴇʟᴘ ᴏғ <a href='https://github.com/adarsh-goel'>ᴀᴅᴀʀsʜ</a> ʙʀᴏ..\n\nGɪᴛʜᴜʙ : <a href='https://github.com/sandippshah'>Gɪᴛʜᴜʙ</a></b>",
+            caption=(
+                f"<b>ᴊᴀɪ sʜʀᴇᴇ ᴋʀsɴᴀ ᴅᴇᴀʀ...\n"
+                f"ɪᴍ <a href='http://telegram.me/spshah878/'>Shaho</a>\n"
+                "ɪ ᴀᴍ ᴛʜᴇ ᴀᴅᴍɪɴ ᴏғ ᴛʜɪs ʙᴏᴛ..ᴀɴᴅ ɪ ᴍᴀᴅᴇ ᴛʜᴇ ʙᴏᴛ ʙʏ ʜᴇʟᴘ ᴏғ "
+                f"<a href='https://telegram.me/spshah878'>sp.shah</a> ʙʀᴏ..\n\n"
+                "Gɪᴛʜᴜʙ : <a href='https://github.com/sandippshah'>Gɪᴛʜᴜʙ</a></b>"
+            ),
             reply_markup=InlineKeyboardMarkup(
-                [[ 
-                     InlineKeyboardButton("ʜᴏᴍᴇ", callback_data="start"),
-                     InlineKeyboardButton("ᴄʟᴏsᴇ ‼️", callback_data="close_data")
-                  ]]            )
+                [
+                    [
+                        InlineKeyboardButton("ʜᴏᴍᴇ", callback_data="start"),
+                        InlineKeyboardButton("ᴄʟᴏsᴇ ‼️", callback_data="close_data")
+                    ]
+                ]
+            )
         )
     elif data.startswith("sendAlert"):
-        user_id =(data.split("_")[1])
-        user_id = int(user_id.replace(' ' , ''))
+        user_id = data.split("_")[1]
+        user_id = int(user_id.replace(' ', ''))
         if len(str(user_id)) == 10:
             reason = str(data.split("_")[2])
             try:
-                await client.send_message(user_id , f'<b>ʏᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ʙʏ ᴀᴅᴍɪɴ.\nRᴇᴀsᴏɴ : {reason}</b>')
+                await client.send_message(user_id, f'<b>ʏᴏᴜ ᴀʀᴇ ʙᴀɴɴᴇᴅ ʙʏ ᴀᴅᴍɪɴ.\nRᴇᴀsᴏɴ : {reason}</b>')
                 await query.message.edit(f"<b>Aʟᴇʀᴛ sᴇɴᴛ ᴛᴏ <code>{user_id}</code>\nRᴇᴀsᴏɴ : {reason}</b>")
             except Exception as e:
                 await query.message.edit(f"<b>sʀʏ ɪ ɢᴏᴛ ᴛʜɪs ᴇʀʀᴏʀ : {e}</b>")
         else:
             await query.message.edit(f"<b>Tʜᴇ ᴘʀᴏᴄᴇss ᴡᴀs ɴᴏᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ʙᴇᴄᴀᴜsᴇ ᴛʜᴇ ᴜsᴇʀ ɪᴅ ᴡᴀs ɴᴏᴛ ᴠᴀʟɪᴅ, ᴏʀ ᴘᴇʀʜᴀᴘs ɪᴛ ᴡᴀs ᴀ ᴄʜᴀɴɴᴇʟ ɪᴅ</b>")
 
-    elif data.startswith('noAlert'):
-        user_id =(data.split("_")[1])
-        user_id = int(user_id.replace(' ' , ''))
+    elif data.startswith("noAlert"):
+        user_id = data.split("_")[1]
+        user_id = int(user_id.replace(' ', ''))
         await query.message.edit(f"<b>Tʜᴇ ʙᴀɴ ᴏɴ <code>{user_id}</code> ᴡᴀs ᴇxᴇᴄᴜᴛᴇᴅ sɪʟᴇɴᴛʟʏ.</b>")
 
-    elif data.startswith('sendUnbanAlert'):
-        user_id =(data.split("_")[1])
-        user_id = int(user_id.replace(' ' , ''))
+    elif data.startswith("sendUnbanAlert"):
+        user_id = data.split("_")[1]
+        user_id = int(user_id.replace(' ', ''))
         if len(str(user_id)) == 10:
             try:
                 unban_text = '<b>ʜᴜʀʀᴀʏ..ʏᴏᴜ ᴀʀᴇ ᴜɴʙᴀɴɴᴇᴅ ʙʏ ᴀᴅᴍɪɴ.</b>'
-                await client.send_message(user_id , unban_text)
+                await client.send_message(user_id, unban_text)
                 await query.message.edit(f"<b>Uɴʙᴀɴɴᴇᴅ Aʟᴇʀᴛ sᴇɴᴛ ᴛᴏ <code>{user_id}</code>\nᴀʟᴇʀᴛ ᴛᴇxᴛ : {unban_text}</b>")
             except Exception as e:
                 await query.message.edit(f"<b>sʀʏ ɪ ɢᴏᴛ ᴛʜɪs ᴇʀʀᴏʀ : {e}</b>")
         else:
-            await query.message.edit(f"<b>Tʜᴇ ᴘʀᴏᴄᴇss ᴡᴀs ɴᴏᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ʙᴇᴄᴀᴜsᴇ ᴛʜᴇ ᴜsᴇʀ ɪᴅ ᴡᴀs ɴᴏᴛ ᴠᴀʟɪᴅ, ᴏʀ ᴘᴇʀʜᴀᴘs ɪᴛ ᴡᴀs ᴀ ᴄʜᴀɴɴᴇʟ ɪᴅ</b>")   
-    elif data.startswith('NoUnbanAlert'):
-        user_id =(data.split("_")[1])
-        user_id = int(user_id.replace(' ' , ''))
+            await query.message.edit(f"<b>Tʜᴇ ᴘʀᴏᴄᴇss ᴡᴀs ɴᴏᴛ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ʙᴇᴄᴀᴜsᴇ ᴛʜᴇ ᴜsᴇʀ ɪᴅ ᴡᴀs ɴᴏᴛ ᴠᴀʟɪᴅ, ᴏʀ ᴘᴇʀʜᴀᴘs ɪᴛ ᴡᴀs ᴀ ᴄʜᴀɴɴᴇʟ ɪᴅ</b>")
+
+    elif data.startswith("NoUnbanAlert"):
+        user_id = data.split("_")[1]
+        user_id = int(user_id.replace(' ', ''))
         await query.message.edit(f"Tʜᴇ ᴜɴʙᴀɴ ᴏɴ <code>{user_id}</code> ᴡᴀs ᴇxᴇᴄᴜᴛᴇᴅ sɪʟᴇɴᴛʟʏ.")
-       
+    
