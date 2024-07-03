@@ -10,7 +10,7 @@ from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait,
 
 
 
-from imdb import Cinemagoer 
+
 import asyncio
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid
