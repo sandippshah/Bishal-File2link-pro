@@ -40,8 +40,8 @@ async def private_receive_handler(c: Client, m: Message):
     if not await db.is_user_exist(m.from_user.id):
         await db.add_user(m.from_user.id)
         await c.send_message(
-            Var.BIN_CHANNEL,
-            f"New User Joined! : \n\nName: [{m.from_user.first_name}](tg://user?id={m.from_user.id}) Started Your Bot!!"
+            Var.NEW_USER_LOG,
+            f"**New User Joined:** \n\n__My new friend__ [{m.from_user.first_name}](tg://user?id={m.from_user.id}) __started your bot!__\nBot : @{Var.BOT_USERNAME}"
         )
 
     if Var.UPDATES_CHANNEL != "None":
@@ -88,7 +88,7 @@ async def private_receive_handler(c: Client, m: Message):
             InlineKeyboardButton("How To Open Link & Verify", url=Var.VERIFY_TUTORIAL)
         ]]
         await m.reply_text(
-            text="<b>Yᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴅᴀʏ.! Pʟᴇᴀsᴇ ᴠᴇʀɪғʏ ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ..! Yᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ ᴏɴᴄᴇ ɪɴ ᴀ ᴅᴀʏ...!\nɴᴇᴇᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴍᴇᴍʙᴇʀsʜɪᴘ ? (ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ). ᴄᴏɴᴛᴀᴄᴛ @spshah878</b>",
+            text="<b>Yᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴠᴇʀɪғɪᴇᴅ..! Pʟᴇᴀsᴇ ᴠᴇʀɪғʏ ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ..! Yᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ ᴏɴᴄᴇ ɪɴ 𝟷𝟸 ʜᴏᴜʀs...!\nɴᴇᴇᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴍᴇᴍʙᴇʀsʜɪᴘ ? (ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ). ᴄᴏɴᴛᴀᴄᴛ @spshah878</b>",
             protect_content=True,
             reply_markup=InlineKeyboardMarkup(btn)
         )

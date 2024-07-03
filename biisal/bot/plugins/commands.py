@@ -1,6 +1,7 @@
 # (c) @biisal @adarsh
 
 from biisal.bot import StreamBot
+from pyrogram import Client, filters
 from biisal.vars import Var
 import logging
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ SRT_TXT = """<b>ᴊᴀɪ sʜʀᴇᴇ ᴋʀsɴᴀ {}!,
 I ᴀᴍ Fɪʟᴇ ᴛᴏ Lɪɴᴋ Gᴇɴᴇʀᴀᴛᴏʀ Bᴏᴛ ᴡɪᴛʜ Cʜᴀɴɴᴇʟ sᴜᴘᴘᴏʀᴛ.
 
 Sᴇɴᴅ ᴍᴇ ᴀɴʏ ғɪʟᴇ ᴀɴᴅ ɢᴇᴛ ᴀ ᴅɪʀᴇᴄᴛ ᴅᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ ᴀɴᴅ sᴛʀᴇᴀᴍᴀʙʟᴇ ʟɪɴᴋ.!
-ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <a href='http://telegram.me/shaho007/'>Shaho</a></b>"""
+ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <a href='http://telegram.me/spshah878/'>Shaho</a></b>"""
 
 @StreamBot.on_message(filters.command("start") & filters.private)
 async def start(b, m):
@@ -29,7 +30,7 @@ async def start(b, m):
         await db.add_user(m.from_user.id)
         await b.send_message(
             Var.NEW_USER_LOG,
-            f"**New User Joined:** \n\n__My new friend__ [{m.from_user.first_name}](tg://user?id={m.from_user.id}) __started your bot!__"
+            f"**New User Joined:** \n\n__My new friend__ [{m.from_user.first_name}](tg://user?id={m.from_user.id}) __started your bot!__\nBot : @{Var.BOT_USERNAME}"
         )
 
     data = m.text.split()
@@ -45,7 +46,7 @@ async def start(b, m):
         if is_valid:
             await verify_user(b, userid, token)
             await m.reply_text(
-                text=f"<b>Hey {m.from_user.mention}, You are successfully verified!\nNow you have unlimited access for all files till today midnight.\nɴᴇᴇᴅ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴍᴇᴍʙᴇʀsʜɪᴘ ? (ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ). ᴄᴏɴᴛᴀᴄᴛ @spshah878</b>",
+                text=f"<b>Hey {m.from_user.mention}, Yᴏᴜ ᴀʀᴇ sᴜᴄᴄᴇssғᴜʟʟʏ ᴠᴇʀɪғɪᴇᴅ!\nNᴏᴡ ʏᴏᴜ ʜᴀᴠᴇ ᴜɴʟɪᴍɪᴛᴇᴅ ᴀᴄᴄᴇss ғᴏʀ Sᴛʀᴇᴀᴍɪɴɢ ᴀɴᴅ Dᴏᴡɴʟᴏᴀᴅɪɴɢ Mᴏᴠɪᴇs ғᴏʀ 𝟷𝟸 ʜᴏᴜʀs</b>",
                 protect_content=True
             )
         else:
@@ -69,7 +70,7 @@ async def start(b, m):
             await StreamBot.send_photo(
                 chat_id=m.chat.id,
                 photo="https://graph.org/file/28dad3c3aea3cad735a6e.jpg",
-                caption="<b>Hey there!\n\nPlease join our updates channel to use me! 😊\n\nDue to server overload, only our channel subscribers can use this bot!</b>",
+                caption="<b>Hᴇʏ ᴛʜᴇʀᴇ!\n\nPʟᴇᴀsᴇ ɪᴏɪɴ ᴏᴜʀ ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴜsᴇ ᴍᴇ! \n😊 Dᴜᴇ ᴛᴏ sᴇʀᴠᴇʀ ᴏᴠᴇʀʟᴏᴀᴅ.\nᴏɴʟʏ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ sᴜʙsᴄʀɪʙᴇʀs ᴄᴀɴ ᴜsᴇ ᴛʜɪs ʙᴏᴛ!</b>",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [InlineKeyboardButton("Join now 🚩", url=f"https://t.me/{Var.UPDATES_CHANNEL}")]
@@ -96,7 +97,7 @@ async def start(b, m):
                     InlineKeyboardButton("About 😎", callback_data="about"),
                     InlineKeyboardButton("Help 😅", callback_data="help")
                 ],
-                [InlineKeyboardButton("Our Group 🚩", url="http://telegram.me/Pikashow_Movies_Request3/")],
+                [InlineKeyboardButton("Our Group 🚩", url="https://t.me/+lphQvs9EC7hiNTZl")],
                 [
                     InlineKeyboardButton("Disclaimer 🔻", url="https://t.me/pikashow_Movies_Update/43"),
                     InlineKeyboardButton("Dev 😊", callback_data="aboutDev")
@@ -110,7 +111,7 @@ async def help_cd(b, m):
         await db.add_user(m.from_user.id)
         await b.send_message(
             Var.NEW_USER_LOG,
-            f"**Nᴇᴡ Usᴇʀ Jᴏɪɴᴇᴅ:** \n\n__Mʏ Nᴇᴡ Fʀɪᴇɴᴅ__ [{m.from_user.first_name}](tg://user?id={m.from_user.id}) __Sᴛᴀʀᴛᴇᴅ Yᴏᴜʀ Bᴏᴛ !!__"
+            f"**New User Joined:** \n\n__My new friend__ [{m.from_user.first_name}](tg://user?id={m.from_user.id}) __started your bot!__\nBot : @{Var.BOT_USERNAME}"
         )
     if Var.UPDATES_CHANNEL != "None":
         try:
@@ -155,7 +156,7 @@ async def help_cd(b, m):
             ],
             [
                 InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ 🔻", url=f"https://t.me/pikashow_Movies_Update/43"),
-                InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url=f"http://telegram.me/Pikashow_Movies_Request3/"),
+                InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url=f"https://t.me/+lphQvs9EC7hiNTZl"),
 
             ],
             [
@@ -232,7 +233,7 @@ async def cb_handler(client, query):
                         InlineKeyboardButton("ᴀʙᴏᴜᴛ 😎", callback_data="about"),
                         InlineKeyboardButton("ʜᴇʟᴘ 😅", callback_data="help")
                     ],
-                    [InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url="http://telegram.me/Pikashow_Movies_Request3/")],
+                    [InlineKeyboardButton("ᴏᴜʀ ɢʀᴏᴜᴘ 🚩", url="https://t.me/+lphQvs9EC7hiNTZl")],
                     [
                         InlineKeyboardButton("ᴅɪsᴄʟᴀɪᴍᴇʀ 🔻", url="https://t.me/pikashow_Movies_Update/43"),
                         InlineKeyboardButton("ᴅᴇᴠ 😊", callback_data="aboutDev")
@@ -244,8 +245,8 @@ async def cb_handler(client, query):
     elif data == "about":
         await query.message.edit_caption(
             caption=(
-                f"<b>Mʏ ɴᴀᴍᴇ :<a href='http://telegram.me/Rx_Bots/'>{bot_name}</a>\n"
-                f"Aᴅᴍɪɴ : <a href='http://telegram.me/spshah878/'>shaho</a>\n"
+                f"<b>Mʏ ɴᴀᴍᴇ :<a href='http://telegram.me/Pikashow_File2Link_Bot/'>{bot_name}</a>\n"
+                f"Aᴅᴍɪɴ : <a href='http://telegram.me/spshah878/'>S.p.Shah</a>\n"
                 "ʜᴏsᴛᴇᴅ ᴏɴ : ʜᴇʀᴏᴋᴜ\n"
                 "ᴅᴀᴛᴀʙᴀsᴇ : ᴍᴏɴɢᴏ ᴅʙ\n"
                 "ʟᴀɴɢᴜᴀɢᴇ : ᴘʏᴛʜᴏɴ 3</b>"
@@ -262,10 +263,10 @@ async def cb_handler(client, query):
     elif data == "help":
         await query.message.edit_caption(
             caption=(
-                f"<b>ᴡᴇ ᴅᴏɴᴛ ɴᴇᴇᴅ ᴍᴀɴʏ <a href='http://telegram.me/Rx_Bots/'>ᴄᴏᴍᴍᴀɴᴅs</a> ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ 🤩.\n\n"
+                f"<b>ᴡᴇ ᴅᴏɴᴛ ɴᴇᴇᴅ ᴍᴀɴʏ <a href='https://t.me/pikashow_Movies_Update/43'>ᴄᴏᴍᴍᴀɴᴅs</a> ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ 🤩.\n\n"
                 "ᴊᴜsᴛ sᴇɴᴅ ᴍᴇ <a href='http://telegram.me/Rx_Bots/'>ᴠɪᴅᴇᴏ ғɪʟᴇs</a> ᴀɴᴅ ɪ ᴡɪʟʟ ɢɪᴠᴇ ʏᴏᴜ "
-                "<a href='http://telegram.me/Rx_Bots/'>ᴅɪʀᴇᴄᴛ ᴅᴏᴡɴʟᴏᴀᴅ & sᴛʀᴇᴀᴍᴀʙʟᴇ</a> ʟɪɴᴋ.\n\n"
-                "ᴏʀ ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴍᴇ ɪɴ <a href='http://telegram.me/Rx_Bots/'>ʏᴏᴜʀ ᴄʜᴀɴɴᴇʟ</a>.."
+                "<a href='http://telegram.me/Pikashow_File2Link_Bot/'>ᴅɪʀᴇᴄᴛ ᴅᴏᴡɴʟᴏᴀᴅ & sᴛʀᴇᴀᴍᴀʙʟᴇ</a> ʟɪɴᴋ.\n\n"
+                "ᴏʀ ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴍᴇ ɪɴ <a href='http://t.me/Pikashow_File2Link_Bot?startgroup=true'>ʏᴏᴜʀ ᴄʜᴀɴɴᴇʟ</a>.."
                 "ᴊᴜsᴛ ᴀᴅᴅ ᴍᴇ ᴀɴᴅ ᴍᴀᴋᴇ ᴍᴇ ᴀᴅᴍɪɴ ᴀɴᴅ sᴇᴇ ᴍʏ ᴍᴀɢɪᴄ 😎</b>"
             ),
             reply_markup=InlineKeyboardMarkup(
@@ -282,10 +283,8 @@ async def cb_handler(client, query):
         await query.message.edit_caption(
             caption=(
                 f"<b>ᴊᴀɪ sʜʀᴇᴇ ᴋʀsɴᴀ ᴅᴇᴀʀ...\n"
-                f"ɪᴍ <a href='http://telegram.me/spshah878/'>Shaho</a>\n"
-                "ɪ ᴀᴍ ᴛʜᴇ ᴀᴅᴍɪɴ ᴏғ ᴛʜɪs ʙᴏᴛ..ᴀɴᴅ ɪ ᴍᴀᴅᴇ ᴛʜᴇ ʙᴏᴛ ʙʏ ʜᴇʟᴘ ᴏғ "
-                f"<a href='https://telegram.me/spshah878'>sp.shah</a> ʙʀᴏ..\n\n"
-                "Gɪᴛʜᴜʙ : <a href='https://github.com/sandippshah'>Gɪᴛʜᴜʙ</a></b>"
+                f"ɪᴍ <a href='http://telegram.me/spshah/'>S.p.Shah</a>\n"
+                "ɪ ᴀᴍ ᴛʜᴇ ᴀᴅᴍɪɴ ᴏғ ᴛʜɪs ʙᴏᴛ</b>"
             ),
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -331,4 +330,8 @@ async def cb_handler(client, query):
         user_id = data.split("_")[1]
         user_id = int(user_id.replace(' ', ''))
         await query.message.edit(f"Tʜᴇ ᴜɴʙᴀɴ ᴏɴ <code>{user_id}</code> ᴡᴀs ᴇxᴇᴄᴜᴛᴇᴅ sɪʟᴇɴᴛʟʏ.")
-    
+
+
+
+
+ 
