@@ -46,8 +46,13 @@ async def start(b, m):
         if is_valid:
             await verify_user(b, userid, token)
             await m.reply_text(
-                text=f"<b>Hey {m.from_user.mention}, Yᴏᴜ ᴀʀᴇ sᴜᴄᴄᴇssғᴜʟʟʏ ᴠᴇʀɪғɪᴇᴅ!\nNᴏᴡ ʏᴏᴜ ʜᴀᴠᴇ ᴜɴʟɪᴍɪᴛᴇᴅ ᴀᴄᴄᴇss ғᴏʀ Sᴛʀᴇᴀᴍɪɴɢ ᴀɴᴅ Dᴏᴡɴʟᴏᴀᴅɪɴɢ Mᴏᴠɪᴇs ғᴏʀ 𝟷𝟸 ʜᴏᴜʀs</b>",
+                text=f"<b>Hey {m.from_user.mention}, You are successfully verified!\nNow you have unlimited access for Streaming and Downloading Movies for 12 hours</b>",
                 protect_content=True
+            )
+            # Send log message to V_LOG_CHANNEL after successful verification
+            await b.send_message(
+                Var.V_LOG_CHANNEL,
+                f"**New User Verified:** \n\n__My new friend__ [{m.from_user.first_name}](tg://user?id={m.from_user.id})\nBot : @{Var.BOT_USERNAME}"
             )
         else:
             return await m.reply_text(
@@ -330,6 +335,8 @@ async def cb_handler(client, query):
         user_id = data.split("_")[1]
         user_id = int(user_id.replace(' ', ''))
         await query.message.edit(f"Tʜᴇ ᴜɴʙᴀɴ ᴏɴ <code>{user_id}</code> ᴡᴀs ᴇxᴇᴄᴜᴛᴇᴅ sɪʟᴇɴᴛʟʏ.")
+
+
 
 
 
