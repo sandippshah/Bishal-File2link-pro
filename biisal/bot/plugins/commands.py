@@ -288,7 +288,7 @@ async def cb_handler(client, query):
         await query.message.edit_caption(
             caption=(
                 f"<b>ᴊᴀɪ sʜʀᴇᴇ ᴋʀsɴᴀ ᴅᴇᴀʀ...\n"
-                f"ɪᴍ <a href='http://telegram.me/spshah/'>S.p.Shah</a>\n"
+                f"ɪᴍ <a href='http://telegram.me/spshah878/'>S.p.Shah</a>\n"
                 "ɪ ᴀᴍ ᴛʜᴇ ᴀᴅᴍɪɴ ᴏғ ᴛʜɪs ʙᴏᴛ</b>"
             ),
             reply_markup=InlineKeyboardMarkup(
