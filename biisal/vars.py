@@ -43,9 +43,9 @@ class Var(object):
     FQDN = str(getenv('FQDN', 'BIND_ADRESS:PORT')) if not ON_HEROKU or getenv('FQDN', '') else APP_NAME+'.herokuapp.com'
     HAS_SSL=bool(getenv('HAS_SSL',True))
     if HAS_SSL:
-        URL = "https://pikashowfile2link-a44747e6d083.herokuapp.com/".format(FQDN)
+        URL = "https://pikashowmovies.fun/".format(FQDN)
     else:
-        URL = "https://pikashowfile2link-a44747e6d083.herokuapp.com/".format(FQDN)
+        URL = "https://pikashowmovies.fun/".format(FQDN)
     DATABASE_URL = str(getenv('DATABASE_URL', 'mongodb+srv://file2link:Surajrathod.878@cluster0.qsj0pe0.mongodb.net/?retryWrites=true&w=majority'))
     UPDATES_CHANNEL = str(getenv('UPDATES_CHANNEL', 'Rx_Bots')) 
     BANNED_CHANNELS = list(set(int(x) for x in str(getenv("BANNED_CHANNELS", "")).split()))   
