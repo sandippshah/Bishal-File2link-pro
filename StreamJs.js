@@ -70,7 +70,7 @@ async function getDets() {
         const movieDetails = await movieData.json();
 
         movieDets.innerHTML = `
-            <h3>Must-see blockbuster film!</h3>
+            <h3>Must-see blockbuster Movies!</h3>
             <h4><span>Title:</span> ${movieDetails.Title}</h4>
             <h4><span>Overview:</span> ${movieDetails.Plot || 'No overview available.'}</h4>
             <h4><span>Release Date:</span> ${movieDetails.Released}</h4>
