@@ -9,23 +9,7 @@ import logging
 import aiohttp
 import jinja2
 import re
-from imdb import IMDb
 
-
-async def fetch_imdb_data(movie_name):
-    ia = IMDb()
-    movies = ia.search_movie(movie_name)
-    if not movies:
-        return None
-    movie = movies[0]
-    ia.update(movie)
-    return {
-        "title": movie.get('title'),
-        "year": movie.get('year'),
-        "rating": movie.get('rating'),
-        "plot": movie.get('plot outline'),
-        "cover_url": movie.get('cover url')
-    }
 
 
 def clean_file_name(file_name):
@@ -74,16 +58,14 @@ async def render_page(id, secure_hash, src=None):
         template = jinja2.Template(f.read())
 
     file_name = clean_file_name(file_data.file_name)
-    
-    imdb_data = await fetch_imdb_data(file_name)
+
     
     
     return template.render(
         file_name=file_name,
         file_url=src,
         file_size=file_size,
-        file_unique_id=file_data.unique_id,
-        imdb_data=imdb_data
+        file_unique_id=file_data.unique_id,        
     )    
     
 
