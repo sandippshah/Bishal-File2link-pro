@@ -8,6 +8,30 @@ import aiofiles
 import logging
 import aiohttp
 import jinja2
+import re
+
+
+
+
+
+def clean_file_name(file_name):
+    # Define blacklist words
+    blacklist_words = ["mkv", "mp4"]  # Add actual blacklist words here
+
+    # Remove Telegram usernames (assuming they start with '@')
+    file_name = re.sub(r'@\w+', '', file_name, flags=re.IGNORECASE)
+
+    # Remove special characters
+    file_name = re.sub(r'[_\-\.\(\)\[\]\':"+]', ' ', file_name)
+
+    # Remove blacklist words
+    for word in blacklist_words:
+        file_name = re.sub(word, '', file_name, flags=re.IGNORECASE)
+
+    # Remove extra spaces
+    file_name = ' '.join(file_name.split())
+
+    return file_name
 
 async def render_page(id, secure_hash, src=None):
     file = await StreamBot.get_messages(int(Var.BIN_CHANNEL), int(id))
@@ -35,11 +59,11 @@ async def render_page(id, secure_hash, src=None):
     with open(template_file) as f:
         template = jinja2.Template(f.read())
 
-    file_name = file_data.file_name.replace("_", " ")
+    file_name = clean_file_name(file_data.file_name)
 
     return template.render(
         file_name=file_name,
         file_url=src,
         file_size=file_size,
         file_unique_id=file_data.unique_id,
-    )
+    )    
