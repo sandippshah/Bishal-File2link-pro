@@ -1,36 +1,100 @@
 //jaldi yeha se hato
 // (c) lord krishna (c) biisal
 
+// StreamJs.js
+
+document.addEventListener("DOMContentLoaded", function () {
+    const uncopyableElement = document.querySelector(".uncopyable");
+
+    uncopyableElement.addEventListener("selectstart", function (event) {
+        event.preventDefault();
+    });
+
+    // Function to fetch IMDb information
+    function fetchIMDbInfo(movieName) {
+        const apiKey = '7998b36c'; // Replace with your OMDb API key
+        const apiUrl = `https://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${apiKey}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.Response === "True") {
+                    document.getElementById('imdbPoster').src = data.Poster;
+                    document.getElementById('imdbTitle').textContent = data.Title;
+                    document.getElementById('imdbRating').textContent = data.imdbRating;
+                    document.getElementById('imdbGenres').textContent = data.Genre;
+                    document.getElementById('imdbPlot').textContent = data.Plot;
+                } else {
+                    console.error('Error fetching IMDb data:', data.Error);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching IMDb data:', error);
+            });
+    }
+
+    // Call the function with the movie name
+    const movieName = "{{file_name}}"; // This should be replaced with the actual movie name from your context
+    fetchIMDbInfo(movieName);
+});
+
+// Existing WOW.js initialization
+new WOW().init();
+
+
 async function getDets() {
-    let randPage = Math.floor(1 + Math.random() * 100)
-    const apiKey = '6abcb6bb99fb77f33c37016a28866ed2';
-    let apiArr = [`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=hin-US&page=${randPage}`, `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}&language=hin-US&page=${randPage}`, `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=hin-US&page=${randPage}`]
-    let ArrRanIndex = Math.floor(Math.random() * apiArr.length)
-    let apiUrl = apiArr[ArrRanIndex]
-    let movieCont = document.querySelector('.movieSug')
-    let img = document.querySelector('.movieimg img')
-    let movieDets = document.querySelector('.movieDets')
-    let movieDetsMini = document.querySelector('.movieDets-mini')
-    let data = await fetch(apiUrl)
-    let resData = await data.json()
-    let ranIndex = Math.floor(Math.random() * resData.results.length)
-    let movie = resData.results[ranIndex]
-    movieDets.innerHTML = `
-    <h3>Must-see blockbuster film!</h3>
-    <h4><span>Title:</span> ${movie.title}</h4>
-                        <h4><span>movie overview:</span> ${movie.overview}</h4>
-                        <h4><span>Release Date:</span> ${movie.release_date}</h4>
-                        <h4><span>Vote Average:</span> ${movie.vote_average}</h4>
-    `
-    movieDetsMini.innerHTML = `
-                <h3><span>Title:</span> ${movie.title}</h3>
-                <h3><span>Release Date:</span> ${movie.release_date}</h3>
-                <h3><span>Vote Average:</span> ${movie.vote_average}</h3>
-        `
-    img.src = `https://image.tmdb.org/t/p/w1280/${movie.poster_path}`
-    movieCont.style.backgroundImage = `url(https://image.tmdb.org/t/p/w1280/${movie.backdrop_path})`;
+    const apiKey = '7998b36c';  // Replace with your OMDb API key
+    const randPage = Math.floor(1 + Math.random() * 100); // Random page number for popular movies
+    const apiUrl = `http://www.omdbapi.com/?apikey=${apiKey}&s=movie&type=movie&page=${randPage}`;
+
+    const movieCont = document.querySelector('.movieSug');
+    const img = document.querySelector('.movieimg img');
+    const movieDets = document.querySelector('.movieDets');
+    const movieDetsMini = document.querySelector('.movieDets-mini');
+
+    try {
+        const data = await fetch(apiUrl);
+        const resData = await data.json();
+
+        if (resData.Error) {
+            console.error('Error fetching movie data:', resData.Error);
+            return;
+        }
+
+        const ranIndex = Math.floor(Math.random() * resData.Search.length);
+        const movie = resData.Search[ranIndex];
+
+        const movieDetailsUrl = `http://www.omdbapi.com/?apikey=${apiKey}&i=${movie.imdbID}`;
+
+        const movieData = await fetch(movieDetailsUrl);
+        const movieDetails = await movieData.json();
+
+        movieDets.innerHTML = `
+            <h3>Must-see blockbuster film!</h3>
+            <h4><span>Title:</span> ${movieDetails.Title}</h4>
+            <h4><span>Overview:</span> ${movieDetails.Plot || 'No overview available.'}</h4>
+            <h4><span>Release Date:</span> ${movieDetails.Released}</h4>
+            <h4><span>Vote Average:</span> ${movieDetails.imdbRating}</h4>
+        `;
+
+        movieDetsMini.innerHTML = `
+            <h3><span>Title:</span> ${movieDetails.Title}</h3>
+            <h3><span>Release Date:</span> ${movieDetails.Released}</h3>
+            <h3><span>Vote Average:</span> ${movieDetails.imdbRating}</h3>
+        `;
+
+        img.src = movieDetails.Poster !== 'N/A' ? movieDetails.Poster : 'placeholder.jpg';
+        movieCont.style.backgroundImage = `url(${movieDetails.Poster !== 'N/A' ? movieDetails.Poster : 'placeholder.jpg'})`;
+    } catch (error) {
+        console.error('Error fetching movie data:', error);
+    }
 }
-window.addEventListener("load", getDets())
+
+window.addEventListener('load', getDets);
+
+
+
+
 
 let homeBtn = document.querySelector(".home-btn")
 let abtBtn = document.querySelector(".about-btn")
