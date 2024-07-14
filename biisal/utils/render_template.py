@@ -16,13 +16,13 @@ import re
 
 def clean_file_name(file_name):
     # Define blacklist words
-    blacklist_words = ["mkv", "mp4"]  # Add actual blacklist words here
+    blacklist_words = ["mkv", "x264", "x265", "mp4"]  # Add actual blacklist words here
 
     # Remove Telegram usernames (assuming they start with '@')
     file_name = re.sub(r'@\w+', '', file_name, flags=re.IGNORECASE)
 
     # Remove special characters
-    file_name = re.sub(r'[_\-\.\[\]\':"+]', ' ', file_name)
+    file_name = re.sub(r'[_\.\[\]\':"+]', ' ', file_name)
 
     # Remove blacklist words
     for word in blacklist_words:
