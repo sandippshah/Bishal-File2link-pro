@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Call the function with the movie name
-    const movieName = "{{file_name}}"; // This should be replaced with the actual movie name from your context
+    const movieName = "leo"; // This should be replaced with the actual movie name from your context
     fetchIMDbInfo(movieName);
 });
 
