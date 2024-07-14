@@ -52,6 +52,14 @@
     <div class="outer">
         <div class="inner">
             <div class="main" id="main">
+                {% if imdb_data %}
+                <div class="imdb-info">
+                    <img src="{{ imdb_data.cover_url }}" alt="{{ imdb_data.title }}">
+                    <h1>{{ imdb_data.title }} ({{ imdb_data.year }})</h1>
+                    <p>Rating: {{ imdb_data.rating }}</p>
+                    <p>{{ imdb_data.plot }}</p>
+                </div>
+                {% endif %}
                 <video id="player" class="player" src="{{file_url}}" type="video/mp4" playsinline controls
                     width="100%"></video>
                 <div class="player"></div>
