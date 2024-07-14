@@ -22,7 +22,7 @@ def clean_file_name(file_name):
     file_name = re.sub(r'@\w+', '', file_name, flags=re.IGNORECASE)
 
     # Remove special characters
-    file_name = re.sub(r'[_\-\.\(\)\[\]\':"+]', ' ', file_name)
+    file_name = re.sub(r'[_\-\.\[\]\':"+]', ' ', file_name)
 
     # Remove blacklist words
     for word in blacklist_words:
