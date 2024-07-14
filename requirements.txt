@@ -17,3 +17,4 @@ gunicorn<= 21.2.0
 shortzy
 pytz
 bs4 
+IMDbPY
