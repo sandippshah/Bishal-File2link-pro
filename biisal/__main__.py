@@ -15,8 +15,6 @@ from .server import web_server
 from .utils.keepalive import ping_server
 from biisal.bot.clients import initialize_clients
 
-from .plugins.premium import add_premium, remove_premium, check_expiry, extend, premium_users, plan
-
 
 
 LOGO = """
