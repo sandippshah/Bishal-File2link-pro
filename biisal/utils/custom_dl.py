@@ -11,6 +11,8 @@ from pyrogram.errors import AuthBytesInvalid
 from biisal.server.exceptions import FIleNotFound
 from pyrogram.file_id import FileId, FileType, ThumbnailSource
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class ByteStreamer:
     def __init__(self, client: Client):
@@ -114,7 +116,6 @@ class ByteStreamer:
             logging.debug(f"Using cached media session for DC {file_id.dc_id}")
         return media_session
 
-
     @staticmethod
     async def get_location(file_id: FileId) -> Union[raw.types.InputPhotoFileLocation,
                                                      raw.types.InputDocumentFileLocation,
@@ -169,6 +170,7 @@ class ByteStreamer:
         last_part_cut: int,
         part_count: int,
         chunk_size: int,
+        retries: int = 5,
     ) -> Union[str, None]:
         """
         Custom generator that yields the bytes of the media file.
@@ -184,43 +186,52 @@ class ByteStreamer:
         location = await self.get_location(file_id)
 
         try:
-            r = await media_session.send(
-                raw.functions.upload.GetFile(
-                    location=location, offset=offset, limit=chunk_size
-                ),
-            )
-            if isinstance(r, raw.types.upload.File):
-                while True:
-                    chunk = r.bytes
-                    if not chunk:
-                        break
-                    elif part_count == 1:
-                        yield chunk[first_part_cut:last_part_cut]
-                    elif current_part == 1:
-                        yield chunk[first_part_cut:]
-                    elif current_part == part_count:
-                        yield chunk[:last_part_cut]
-                    else:
-                        yield chunk
-
-                    current_part += 1
-                    offset += chunk_size
-
-                    if current_part > part_count:
-                        break
-
+            for attempt in range(retries):
+                try:
                     r = await media_session.send(
                         raw.functions.upload.GetFile(
                             location=location, offset=offset, limit=chunk_size
                         ),
                     )
+                    if isinstance(r, raw.types.upload.File):
+                        while True:
+                            chunk = r.bytes
+                            if not chunk:
+                                break
+                            elif part_count == 1:
+                                yield chunk[first_part_cut:last_part_cut]
+                            elif current_part == 1:
+                                yield chunk[first_part_cut:]
+                            elif current_part == part_count:
+                                yield chunk[:last_part_cut]
+                            else:
+                                yield chunk
+
+                            current_part += 1
+                            offset += chunk_size
+
+                            if current_part > part_count:
+                                break
+
+                            r = await media_session.send(
+                                raw.functions.upload.GetFile(
+                                    location=location, offset=offset, limit=chunk_size
+                                ),
+                            )
+                    break
+                except OSError as e:
+                    if attempt < retries - 1:
+                        logging.warning(f"Attempt {attempt + 1} failed: {e}")
+                        await asyncio.sleep(2 ** attempt)  # Exponential backoff
+                    else:
+                        logging.error(f"All retry attempts failed: {e}")
+                        raise
         except (TimeoutError, AttributeError):
             pass
         finally:
-            logging.debug("Finished yielding file with {current_part} parts.")
+            logging.debug(f"Finished yielding file with {current_part} parts.")
             work_loads[index] -= 1
 
-    
     async def clean_cache(self) -> None:
         """
         function to clean the cache to reduce memory usage
